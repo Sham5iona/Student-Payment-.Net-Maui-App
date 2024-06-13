@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:StudentPaymentApp.ViewModel"
+             xmlns:scheduler="clr-namespace:Syncfusion.Maui.Scheduler;assembly=Syncfusion.Maui.Scheduler"
+             x:Class="StudentPaymentApp.Views.SchedulePage">
+
+    <ContentPage.BindingContext>
+        <local:SchedulerViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid>
+        <scheduler:SfScheduler x:Name="Scheduler"
+                               ShowBusyIndicator="True"
+                               AppointmentsSource="{Binding Events}"
+                               FirstDayOfWeek="Monday"
+                               AllowedViews="Month,Day,Week,WorkWeek,TimelineDay,TimelineWeek,TimelineMonth,Agenda,TimelineWorkWeek,Default"
+                               AllowViewNavigation="False"
+                               Tapped="ShowAppointmentPage">
+            <scheduler:SfScheduler.MonthView>
+                <scheduler:SchedulerMonthView AppointmentDisplayMode="Indicator" NavigationDirection="Vertical"/>
+            </scheduler:SfScheduler.MonthView>
+        </scheduler:SfScheduler>
+    </Grid>
+</ContentPage>
