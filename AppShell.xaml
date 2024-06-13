@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+           xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+           xmlns:local="clr-namespace:StudentPaymentApp.Views"
+           x:Class="StudentPaymentApp.AppShell"
+           FlyoutBehavior="Disabled"
+           Shell.TabBarIsVisible="True">
+
+    <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
+        <Tab Title="Students" Icon="student.png">
+            <ShellContent ContentTemplate="{DataTemplate local:StudentsPage}" />
+        </Tab>
+        <Tab Title="Payments" Icon="payment.png">
+            <ShellContent ContentTemplate="{DataTemplate local:PaymentsPage }" />
+        </Tab>
+        <Tab Title="Schedule" Icon="schedule.png">
+            <ShellContent  ContentTemplate="{DataTemplate local:SchedulePage }" />
+        </Tab>
+        <Tab  Title="Analytics" Icon="analytics.png">
+            <ShellContent  ContentTemplate="{DataTemplate local:AnalyticsPage }" />
+        </Tab>
+        </FlyoutItem>
+    
+</Shell>
