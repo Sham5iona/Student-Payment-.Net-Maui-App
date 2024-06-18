@@ -1,31 +1,40 @@
-﻿using Syncfusion.Maui.Scheduler;
-using System;
-using System.Collections.Generic;
+﻿using StudentPaymentApp.Model;
+using StudentPaymentApp.Model.Services;
+using Syncfusion.Maui.Scheduler;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace StudentPaymentApp.ViewModel
 {
-    public class SchedulerViewModel
+    public partial class SchedulerViewModel
     {
+        private readonly IAppointmentService _service;
         public ObservableCollection<SchedulerAppointment> Events { get; set; }
 
+        public SchedulerViewModel(IAppointmentService service)
+        {
+
+            _service = service;
+            Events = new ObservableCollection<SchedulerAppointment>();
+        }
         public SchedulerViewModel()
         {
-            Events = new ObservableCollection<SchedulerAppointment>
-            {
-                new SchedulerAppointment
-                {
-                     StartTime = new DateTime(2024, 6, 5, 7, 0, 0),
-                     EndTime = new DateTime(2024, 6, 5, 14, 30, 0),
-                     Subject="Hunting",
-                     Background=Colors.Blue,
-                     Location="Шуманица"
-                }
-            };
-
         }
+
+        public async void LoadAppointmentsAsync()
+        {
+
+            var appointments = await _service.ShowAppointmentsAsync();
+
+            if (Events.Any())
+            {
+                Events.Clear(); // Clear existing appointments
+            }
+
+            foreach (var appointment in appointments)
+            {
+                Events.Add(appointment); // Add retrieved appointments
+            }
+        }
+
     }
 }
