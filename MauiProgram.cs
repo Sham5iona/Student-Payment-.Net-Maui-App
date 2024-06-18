@@ -1,5 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
+using StudentPaymentApp.Model.Services;
+using StudentPaymentApp.ViewModel;
+using StudentPaymentApp.Views;
 using Syncfusion.Maui.Core.Hosting;
+using StudentPaymentApp.Data;
 
 namespace StudentPaymentApp
 {
@@ -16,9 +20,18 @@ namespace StudentPaymentApp
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
+            // Register services and view models
+            builder.Services.AddTransient<IAppointmentService, AppointmentService>();
+            builder.Services.AddTransient<AppointmentViewModel>();
+            builder.Services.AddTransient<SchedulerViewModel>();
+            builder.Services.AddSingleton<StudentPaymentDbContext>();
+
+            // Register pages
+            builder.Services.AddSingleton<SchedulePage>();
+            builder.Services.AddSingleton<AddAppointmentPage>();
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
             return builder.Build();
