@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="StudentPaymentApp.Views.AddAppointmentPage"
+             xmlns:local="clr-namespace:StudentPaymentApp.ViewModel"
+             Title="Add Appointment">
+
+    <Grid RowDefinitions="Auto,*">
+        <Button Grid.Row="0" ImageSource="go_back.png" Margin="5" WidthRequest="60" Clicked="GoBack" HeightRequest="30" HorizontalOptions="Start" VerticalOptions="Start" />
+
+        <ScrollView x:Name="ScrollView" Grid.Row="1">
+            <VerticalStackLayout Padding="20">
+                <Label 
+                    Text="Add New Appointment"
+                    FontSize="24"
+                    FontAttributes="Bold"
+                    HorizontalOptions="Center" 
+                    VerticalOptions="Start" />
+
+                <Label Text="Title"
+                       FontSize="18"
+                       HorizontalOptions="Start"/>
+                <Entry x:Name="TitleEntry" Text="{Binding Subject}"
+                       Placeholder="Enter title" WidthRequest="350" HorizontalOptions="Start"
+                       Margin="10" />
+
+                <Label Text="Start Date"
+                       FontSize="18"
+                       HorizontalOptions="Start" />
+                <DatePicker x:Name="DateEntry" Margin="10" Date="{Binding StartDate}"/>
+
+                <Label Text="Start Time"
+                       FontSize="18" HorizontalOptions="Start" />
+                <TimePicker x:Name="TimeEntry" Margin="10" Time="{Binding StartTime}"/>
+
+                <Label Text="End Date"
+                       FontSize="18"
+                       HorizontalOptions="Start" />
+                <DatePicker x:Name="DateEnd" Margin="10" Date="{Binding EndDate}"/>
+
+                <Label Text="End Time"
+                       FontSize="18" HorizontalOptions="Start" />
+                <TimePicker x:Name="TimeEnd" Margin="10" Time="{Binding EndTime}"/>
+
+                <Label Text="Description"
+                       FontSize="18" HorizontalOptions="Start"/>
+                <Editor x:Name="DescriptionEntry"
+                        Placeholder="Enter description"
+                        AutoSize="TextChanges"
+                        HeightRequest="100"
+                        Margin="10" Text="{Binding Description}"/>
+
+                <Label Text="Location"
+                       FontSize="18"
+                       HorizontalOptions="Start"/>
+                <Entry x:Name="LocationEntry" Text="{Binding Location}"
+                        Placeholder="Enter location" WidthRequest="350" HorizontalOptions="Start"
+                        Margin="10" />
+
+                <Button Text="Add"
+                        VerticalOptions="End"
+                        Command="{Binding AddCommand}"/>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

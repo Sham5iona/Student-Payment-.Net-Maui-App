@@ -1,22 +1,40 @@
-namespace StudentPaymentApp.Views;
+using StudentPaymentApp.ViewModel;
+using Syncfusion.Maui.Scheduler;
 
-public partial class SchedulePage : ContentPage
+namespace StudentPaymentApp.Views
 {
-	public SchedulePage()
-	{
+    public partial class SchedulePage : ContentPage
+    {
+        private readonly SchedulerViewModel _scheduler;
 
-		InitializeComponent();
+        public SchedulePage(SchedulerViewModel scheduler)
+        {
+            InitializeComponent();
+            BindingContext = scheduler;
+            Scheduler.AppointmentTextStyle.FontSize = 20;
+            _scheduler = scheduler;
+        }
 
-		if(Scheduler.DaysView != null)
-			Scheduler.AppointmentTextStyle.FontSize = 20;
-		
-	}
+        private async void ShowAppointmentPage(object sender, SchedulerTappedEventArgs e)
+        {
+            if (e.Element == SchedulerElement.Appointment)
+            {
+                await App.Current.MainPage.DisplayAlert("Message", "Appointment Tapped", "OK");
+            }
+        }
 
-	private void ShowAppointmentPage(object sender, EventArgs e)
-	{
-		//access SchedulerPage properties by Scheduler field
+        private async void AddAppointment(object sender, EventArgs e)
+        {
+            await Shell.Current.GoToAsync(nameof(AddAppointmentPage));
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            _scheduler.LoadAppointmentsAsync(); // Load appointments asynchronously
+        }
 
 
-	}
-
+    }
 }

@@ -5,12 +5,10 @@
              xmlns:scheduler="clr-namespace:Syncfusion.Maui.Scheduler;assembly=Syncfusion.Maui.Scheduler"
              x:Class="StudentPaymentApp.Views.SchedulePage">
 
-    <ContentPage.BindingContext>
-        <local:SchedulerViewModel />
-    </ContentPage.BindingContext>
-
-    <Grid>
+    <AbsoluteLayout>
         <scheduler:SfScheduler x:Name="Scheduler"
+                               AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+                               AbsoluteLayout.LayoutFlags="All"
                                ShowBusyIndicator="True"
                                AppointmentsSource="{Binding Events}"
                                FirstDayOfWeek="Monday"
@@ -21,5 +19,25 @@
                 <scheduler:SchedulerMonthView AppointmentDisplayMode="Indicator" NavigationDirection="Vertical"/>
             </scheduler:SfScheduler.MonthView>
         </scheduler:SfScheduler>
-    </Grid>
+
+        <!-- Custom button with icon and text -->
+        <Grid AbsoluteLayout.LayoutBounds="{OnPlatform Android='0.83, -0.01, AutoSize, AutoSize',
+                                               WinUI='0.74, -0.01, AutoSize, AutoSize'}"
+              AbsoluteLayout.LayoutFlags="PositionProportional"
+              Padding="10">
+            <Frame BackgroundColor="Transparent" BorderColor="Transparent"
+                   HasShadow="False"
+                   Padding="0">
+                <StackLayout Orientation="Horizontal" Spacing="5">
+                    <Image Source="add.png" WidthRequest="24" HeightRequest="24"/>
+                    <Label VerticalOptions="Center"/>
+                </StackLayout>
+            </Frame>
+            <Button BackgroundColor="Transparent"
+                    AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
+                    AbsoluteLayout.LayoutFlags="All"
+                    Clicked="AddAppointment"/>
+        </Grid>
+    </AbsoluteLayout>
+
 </ContentPage>
