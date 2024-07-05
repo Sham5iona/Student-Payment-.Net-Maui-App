@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:StudentPaymentApp.ViewModel"
+             xmlns:scheduler="clr-namespace:Syncfusion.Maui.Scheduler;assembly=Syncfusion.Maui.Scheduler"
+             x:Class="StudentPaymentApp.Views.SchedulePage">
+
+    <ContentPage.BindingContext>
+        <local:SchedulerViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid>
+
+        <!-- SfScheduler taking most of the screen -->
+        <scheduler:SfScheduler x:Name="Scheduler"
+                               Grid.Row="0"
+                               ShowBusyIndicator="True"
+                               AppointmentsSource="{Binding Events}"
+                               FirstDayOfWeek="Monday"
+                               AllowedViews="Month,Day,Week,WorkWeek,TimelineDay,TimelineWeek,TimelineMonth,Agenda,TimelineWorkWeek,Default"
+                               AllowViewNavigation="True"
+                               Tapped="ShowAppointmentPage">
+            <scheduler:SfScheduler.MonthView>
+                <scheduler:SchedulerMonthView AppointmentDisplayMode="Indicator" NavigationDirection="Vertical"/>
+            </scheduler:SfScheduler.MonthView>
+        </scheduler:SfScheduler>
+
+        <!-- Custom button with icon and text, fixed to the right of the month header -->
+        <Frame Grid.Row="0" VerticalOptions="End" HorizontalOptions="End" BackgroundColor="Transparent" BorderColor="Transparent"
+               Padding="10">
+            <StackLayout Orientation="Horizontal" Spacing="5" >
+                <Image Source="add.png" WidthRequest="50" HeightRequest="60"/>
+            </StackLayout>
+        </Frame>
+        
+        <Button BackgroundColor="Transparent" Clicked="AddAppointment"/>
+
+    </Grid>
+
+</ContentPage>
