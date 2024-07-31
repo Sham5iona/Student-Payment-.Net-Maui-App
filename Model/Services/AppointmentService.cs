@@ -59,5 +59,53 @@ namespace StudentPaymentApp.Model.Services
 
             return schedulerAppointment;
         }
+
+        public async Task<IEnumerable<Appointment>> GetAppointmentsAsync()
+        {
+            return await _dbContext.GetAppointmentsAsync();
+        }
+
+        public async Task DeleteAppointmentAsync(Appointment appointment)
+        {
+            await _dbContext.DeleteAppointmentAsync(appointment);
+        }
+
+        public Appointment ConfigureSchedulerAppoitment(
+                            SchedulerAppointment scheduler_appointment)
+        {
+            var appointment = new Appointment
+            {
+                Subject = scheduler_appointment.Subject,
+                Description = scheduler_appointment.Notes,
+                Location = scheduler_appointment.Location,
+                StartDate = scheduler_appointment.StartTime,
+                EndDate = scheduler_appointment.EndTime
+            };
+            return appointment;
+        }
+        public Appointment ConfigureAppointment(SchedulerAppointment scheduler_appointment)
+        {
+            var appointment = new Appointment
+            {
+                Subject = scheduler_appointment.Subject,
+                Description = scheduler_appointment.Notes,
+                Location = scheduler_appointment.Location,
+                StartDate = scheduler_appointment.StartTime,
+                EndDate = scheduler_appointment.EndTime
+            };
+
+            return appointment;
+        }
+
+        public async Task<Appointment> EditAppointmentAsync(Appointment appointment)
+        {
+            await _dbContext.EditAppointmentAsync(appointment);
+            return appointment;
+        }
+
+        public async Task<int> GetAppointmentIdByDate(Appointment appointment)
+        {
+            return await _dbContext.GetAppointmentIdAsync(appointment);
+        }
     }
 }

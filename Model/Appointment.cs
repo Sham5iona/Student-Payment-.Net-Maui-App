@@ -39,7 +39,7 @@ namespace StudentPaymentApp.Model
             this.Location = location;
         }
 
-        public Appointment() //empty constructor for EF Core
+        public Appointment()
         {
 
         }

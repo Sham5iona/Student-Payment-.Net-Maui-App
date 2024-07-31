@@ -22,7 +22,6 @@ namespace StudentPaymentApp.Data
             }
 
             await _connection.CreateTableAsync<Student>();
-            await _connection.CreateTableAsync<Student>();
             await _connection.CreateTableAsync<Appointment>();
         }
 
@@ -45,6 +44,30 @@ namespace StudentPaymentApp.Data
         {
             return await _connection.Table<Appointment>().CountAsync();
         }
+        public async Task DeleteAppointmentAsync(Appointment appointment)
+        {
+            await _connection.Table<Appointment>()
+                    .DeleteAsync(a => a.StartDate == appointment.StartDate &&
+                    a.EndDate == appointment.EndDate);
+        }
+        public async Task<Appointment> EditAppointmentAsync(Appointment appointment)
+        {
+            var existingAppointment = await _connection.Table<Appointment>()
+                                .Where(a => a.StartDate == appointment.StartDate)
+                                .FirstOrDefaultAsync();
 
+            await _connection.UpdateAsync(appointment);
+
+            return appointment;
+        }
+
+        public async Task<int> GetAppointmentIdAsync(Appointment appointment)
+        {
+            var current_appointment = await _connection.Table<Appointment>()
+                .FirstOrDefaultAsync(a => a.StartDate == appointment.StartDate && a.EndDate == appointment.EndDate);
+
+            return current_appointment.Id;
+
+        }
     }
 }
