@@ -1,11 +1,14 @@
-﻿using StudentPaymentApp.Model;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using StudentPaymentApp.Model;
 using StudentPaymentApp.Model.Services;
+using StudentPaymentApp.Views;
 using Syncfusion.Maui.Scheduler;
 using System.Collections.ObjectModel;
 
 namespace StudentPaymentApp.ViewModel
 {
-    public partial class SchedulerViewModel
+    public partial class SchedulerViewModel : ObservableObject
     {
         private readonly IAppointmentService _service;
         public ObservableCollection<SchedulerAppointment> Events { get; set; }

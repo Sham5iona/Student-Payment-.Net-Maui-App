@@ -9,7 +9,7 @@ namespace StudentPaymentApp.ViewModel
     public partial class AppointmentViewModel : ObservableObject
     {
         private readonly IAppointmentService _service;
-        private readonly SchedulerViewModel _scheduler;
+        private static int _id;
 
         [ObservableProperty]
         private string subject;
@@ -38,11 +38,10 @@ namespace StudentPaymentApp.ViewModel
         }
 
         // Combine the constructors to ensure IAppointmentService is always initialized
-        public AppointmentViewModel(IAppointmentService service,
-                                    SchedulerViewModel scheduler)
+        public AppointmentViewModel(IAppointmentService service)
         {
             _service = service;
-            _scheduler = scheduler;
+
             InitializeProperties();
         }
 
@@ -58,13 +57,52 @@ namespace StudentPaymentApp.ViewModel
             Description = string.Empty;
         }
 
-        [RelayCommand]
-        private async Task Add()
+        public void ExtractProperties(Appointment appointment)
         {
-            if (string.IsNullOrWhiteSpace(Subject)) return; // Ensure subject is not empty
+
+            if (appointment == null) 
+                throw new ArgumentNullException(nameof(appointment));
+
+            _id = appointment.Id;
+            StartDate = appointment.StartDate;
+            EndDate = appointment.EndDate;
+            StartTime = appointment.StartDate.TimeOfDay;
+            EndTime = appointment.EndDate.TimeOfDay;
+            Subject = appointment.Subject;
+            Location = appointment.Location;
+            Description = appointment.Description;
+        }
+
+        [RelayCommand]
+        private async Task AddAsync()
+        {
 
             var startDateTime = StartDate.Date + StartTime;
             var endDateTime = EndDate.Date + EndTime;
+            DateTime now = DateTime.Now;
+
+            // Ensure input data is all valid
+            if (string.IsNullOrWhiteSpace(Subject) || startDateTime < now.Date || endDateTime <= now ||
+            DateTime.Compare(startDateTime, endDateTime) >= 0 ||
+            string.IsNullOrWhiteSpace(Location) || string.IsNullOrWhiteSpace(Description))
+            {
+                //Send a message request by Messaging Center to be shown on the view that is subscribed to this view model
+                MessagingCenter.Send(this, "Invalid input data!");
+
+                return;
+
+            }
+
+            var appointments = await _service.GetAppointmentsAsync();
+            
+            var exists = appointments.Any(a =>
+                a.StartDate == startDateTime || a.EndDate == endDateTime);
+
+            if (exists)
+            {
+                MessagingCenter.Send(this, "Appointment already exists!");
+                return;
+            }
 
             var appointment = new Appointment
             {
@@ -75,7 +113,7 @@ namespace StudentPaymentApp.ViewModel
                 Location = Location,
             };
 
-            var addedAppointment = await _service.AddAppointmentAsync(appointment);
+            await _service.AddAppointmentAsync(appointment);
 
             // Clear properties and reload appointments
             InitializeProperties();
@@ -83,6 +121,53 @@ namespace StudentPaymentApp.ViewModel
             await Shell.Current.GoToAsync(".."); //navigate to previous page
         }
 
+        [RelayCommand]
+        private async Task EditAsync()
+        {
+            var startDateTime = StartDate.Date + StartTime;
+            var endDateTime = EndDate.Date + EndTime;
+            DateTime now = DateTime.Now;
+
+            // Ensure input data is all valid
+            if (string.IsNullOrWhiteSpace(Subject) || startDateTime < now.Date || endDateTime <= now.Date ||
+            DateTime.Compare(startDateTime, endDateTime) >= 0 ||
+            string.IsNullOrWhiteSpace(Location) || string.IsNullOrWhiteSpace(Description))
+            {
+                //Send a message request by Messaging Center to be shown on the view that is subscribed to this view model
+                MessagingCenter.Send(this, "Invalid input data!");
+
+                return;
+
+            }
+
+            var appointments = await _service.GetAppointmentsAsync();
+
+            var exists = appointments.Any(a =>
+                a.StartDate == startDateTime || a.EndDate == endDateTime);
+
+            if (exists)
+            {
+                MessagingCenter.Send(this, "Appointment already exists!");
+                return;
+            }
+
+            var appointment = new Appointment
+            {
+                Id = _id,
+                Subject = Subject,
+                StartDate = startDateTime,
+                EndDate = endDateTime,
+                Description = Description,
+                Location = Location
+            };
+
+            await _service.EditAppointmentAsync(appointment);
+
+            // Clear properties and reload appointments
+            InitializeProperties();
+
+            await Shell.Current.GoToAsync(nameof(SchedulePage)); //navigate to previous page
+        }
 
     }
 }

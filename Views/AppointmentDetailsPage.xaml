@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="StudentPaymentApp.Views.AppointmentDetailsPage"
+             Title="Appointment Details">
+
+    <Grid RowDefinitions="Auto,*">
+        <Button Grid.Row="0" ImageSource="go_back.png" Margin="5" WidthRequest="60" Clicked="GoBack" HeightRequest="30" HorizontalOptions="Start" VerticalOptions="Start" />
+
+        <ScrollView Grid.Row="1">
+            <StackLayout Padding="20" Spacing="20">
+                <Label Text="Subject" FontSize="Medium" FontAttributes="Bold"/>
+                <Label Text="{Binding Subject}" FontSize="Medium"/>
+
+                <Label Text="Start Time" FontSize="Medium" FontAttributes="Bold"/>
+                <Label Text="{Binding StartTime, StringFormat='{0:MMMM dd, yyyy HH:mm}'}" FontSize="Medium"/>
+
+                <Label Text="End Time" FontSize="Medium" FontAttributes="Bold"/>
+                <Label Text="{Binding EndTime, StringFormat='{0:MMMM dd, yyyy HH:mm}'}" FontSize="Medium"/>
+
+                <Label Text="Location" FontSize="Medium" FontAttributes="Bold"/>
+                <Label Text="{Binding Location}" FontSize="Medium"/>
+
+                <Label Text="Description" FontSize="Medium" FontAttributes="Bold"/>
+                <Label Text="{Binding Notes}" FontSize="Medium"/>
+
+                <Button Text="Edit Appointment" Clicked="Edit" HorizontalOptions="Start" WidthRequest="200" />
+                <Button Text="Delete Appointment" Clicked="Delete" HorizontalOptions="Start" WidthRequest="200" />
+            </StackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

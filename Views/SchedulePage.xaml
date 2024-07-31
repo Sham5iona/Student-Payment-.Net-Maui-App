@@ -5,39 +5,37 @@
              xmlns:scheduler="clr-namespace:Syncfusion.Maui.Scheduler;assembly=Syncfusion.Maui.Scheduler"
              x:Class="StudentPaymentApp.Views.SchedulePage">
 
-    <AbsoluteLayout>
+    <ContentPage.BindingContext>
+        <local:SchedulerViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid>
+
+        <!-- SfScheduler taking most of the screen -->
         <scheduler:SfScheduler x:Name="Scheduler"
-                               AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
-                               AbsoluteLayout.LayoutFlags="All"
+                               Grid.Row="0"
                                ShowBusyIndicator="True"
                                AppointmentsSource="{Binding Events}"
                                FirstDayOfWeek="Monday"
                                AllowedViews="Month,Day,Week,WorkWeek,TimelineDay,TimelineWeek,TimelineMonth,Agenda,TimelineWorkWeek,Default"
-                               AllowViewNavigation="False"
+                               AllowViewNavigation="True"
                                Tapped="ShowAppointmentPage">
             <scheduler:SfScheduler.MonthView>
                 <scheduler:SchedulerMonthView AppointmentDisplayMode="Indicator" NavigationDirection="Vertical"/>
             </scheduler:SfScheduler.MonthView>
         </scheduler:SfScheduler>
 
-        <!-- Custom button with icon and text -->
-        <Grid AbsoluteLayout.LayoutBounds="{OnPlatform Android='0.83, -0.01, AutoSize, AutoSize',
-                                               WinUI='0.74, -0.01, AutoSize, AutoSize'}"
-              AbsoluteLayout.LayoutFlags="PositionProportional"
-              Padding="10">
-            <Frame BackgroundColor="Transparent" BorderColor="Transparent"
-                   HasShadow="False"
-                   Padding="0">
-                <StackLayout Orientation="Horizontal" Spacing="5">
-                    <Image Source="add.png" WidthRequest="24" HeightRequest="24"/>
-                    <Label VerticalOptions="Center"/>
-                </StackLayout>
-            </Frame>
-            <Button BackgroundColor="Transparent"
-                    AbsoluteLayout.LayoutBounds="0, 0, 1, 1"
-                    AbsoluteLayout.LayoutFlags="All"
-                    Clicked="AddAppointment"/>
-        </Grid>
-    </AbsoluteLayout>
+        <!-- Image with tap gesture recognizer -->
+        <Frame Grid.Row="0" VerticalOptions="End" HorizontalOptions="End" BackgroundColor="Transparent" BorderColor="Transparent" Padding="10">
+            <StackLayout Orientation="Horizontal" Spacing="5">
+                <Image Source="add.png" WidthRequest="50" HeightRequest="60">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnAddImageTapped"/>
+                    </Image.GestureRecognizers>
+                </Image>
+            </StackLayout>
+        </Frame>
+
+    </Grid>
 
 </ContentPage>
