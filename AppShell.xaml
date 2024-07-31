@@ -8,15 +8,16 @@
            Shell.TabBarIsVisible="True">
 
     <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
+        <Tab Title="Schedule" Icon="schedule.png">
+            <ShellContent  ContentTemplate="{DataTemplate local:SchedulePage }" />
+        </Tab>
         <Tab Title="Students" Icon="student.png">
             <ShellContent ContentTemplate="{DataTemplate local:StudentsPage}" />
         </Tab>
         <Tab Title="Payments" Icon="payment.png">
             <ShellContent ContentTemplate="{DataTemplate local:PaymentsPage }" />
         </Tab>
-        <Tab Title="Schedule" Icon="schedule.png">
-            <ShellContent  ContentTemplate="{DataTemplate local:SchedulePage }" />
-        </Tab>
+        
         <Tab  Title="Analytics" Icon="analytics.png">
             <ShellContent  ContentTemplate="{DataTemplate local:AnalyticsPage }" />
         </Tab>

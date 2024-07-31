@@ -29,6 +29,7 @@ namespace StudentPaymentApp
             // Register pages
             builder.Services.AddSingleton<SchedulePage>();
             builder.Services.AddSingleton<AddAppointmentPage>();
+            builder.Services.AddSingleton<EditAppointmentPage>();
 
 #if DEBUG
             builder.Logging.AddDebug();
