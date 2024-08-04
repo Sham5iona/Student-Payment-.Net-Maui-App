@@ -40,13 +40,11 @@ namespace StudentPaymentApp.Views
             }
         }
 
-       
-
         protected override void OnAppearing()
         {
             base.OnAppearing();
 
-            _scheduler.LoadAppointmentsAsync(); // Load appointments asynchronously
+            _scheduler.LoadAppointments();
         }
 
 

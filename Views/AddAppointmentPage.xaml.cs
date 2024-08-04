@@ -40,7 +40,7 @@ public partial class AddAppointmentPage : ContentPage
     }
     private async void GoBack(object sender, EventArgs e)
     {
-        
+
         await Shell.Current.GoToAsync(".."); //navigate to previous page
     }
 

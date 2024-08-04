@@ -1,8 +1,78 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:StudentPaymentApp.ViewModel"
+             xmlns:model="clr-namespace:StudentPaymentApp.Model"
              x:Class="StudentPaymentApp.Views.StudentsPage">
-    <VerticalStackLayout>
+
+    <ContentPage.BindingContext>
+        <!-- Instantiate ViewModel -->
+        <local:ShowStudentsViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid Padding="10">
+        <!-- Define row heights to accommodate the fixed "Add" button -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- For the "Add" button -->
+            <RowDefinition Height="*"/>
+            <!-- For the scrollable content -->
+        </Grid.RowDefinitions>
         
-    </VerticalStackLayout>
+        <!-- Fixed "Add" button -->
+        <Frame Grid.Row="0" VerticalOptions="End" HorizontalOptions="End" BackgroundColor="Transparent" BorderColor="Transparent" Padding="10">
+            <StackLayout Orientation="Horizontal" Spacing="5">
+                <Image Source="add.png" WidthRequest="50" HeightRequest="60">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="AddAsync"/>
+                    </Image.GestureRecognizers>
+                </Image>
+                <Image Source="sort.png" WidthRequest="50" HeightRequest="50" Margin="15">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SortAscCommand}"/>
+                    </Image.GestureRecognizers>
+                </Image>
+                <Image Source="sort_desc.png" WidthRequest="50" HeightRequest="50" Margin="15">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SortDescCommand}"/>
+                    </Image.GestureRecognizers>
+                </Image>
+            </StackLayout>
+        </Frame>
+
+        <!-- Scrollable content -->
+        <ScrollView Grid.Row="1">
+            <CollectionView ItemsSource="{Binding Students}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:Student">
+                        <Frame Margin="5" Padding="10" HasShadow="True">
+                            <VerticalStackLayout>
+                                <Label Text="{Binding Name, StringFormat='Name: {0}'}" FontSize="25" FontAttributes="Bold"/>
+                                <Label Text="{Binding ParentName, StringFormat='Parent name: {0}'}" FontSize="25" FontAttributes="Bold"/>
+                                <Label Text="{Binding Age, StringFormat='Age: {0}'}" FontSize="25" FontAttributes="Bold"/>
+                                <Label Text="{Binding Location, StringFormat='Location: {0}'}" FontSize="25" FontAttributes="Bold"/>
+                                <Label Text="{Binding IsActive, StringFormat='Is active: {0}'}" FontSize="25" FontAttributes="Bold"/>
+                                <Label Text="{Binding LastModification, StringFormat='Last modified: {0}'}" FontSize="25" FontAttributes="Bold"/>
+
+                                <!-- Adding a StackLayout to hold the action icons -->
+                                <StackLayout Orientation="Horizontal" Spacing="20" HorizontalOptions="Start" Margin="0, 15, 0, 0">
+                                    <Image Source="edit.png" WidthRequest="50" HeightRequest="60">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer Tapped="EditAsync" CommandParameter="{Binding Id}"/>
+                                        </Image.GestureRecognizers>
+                                    </Image>
+                                    <Image Source="bin.png" WidthRequest="50" HeightRequest="60">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type local:ShowStudentsViewModel}}, Path=DeleteCommand}" CommandParameter="{Binding Id}"/>
+                                        </Image.GestureRecognizers>
+                                    </Image>
+                                </StackLayout>
+                            </VerticalStackLayout>
+                        </Frame>
+
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </ScrollView>
+    </Grid>
 </ContentPage>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:StudentPaymentApp.ViewModel"
+             x:Class="StudentPaymentApp.Views.AddStudentPage">
+
+    <ContentPage.BindingContext>
+        <local:StudentViewModel/>
+    </ContentPage.BindingContext>
+    
+    <Grid RowDefinitions="Auto,*">
+        <Button Grid.Row="0" ImageSource="go_back.png" Margin="5" WidthRequest="60" Clicked="GoBack" HeightRequest="30" HorizontalOptions="Start" VerticalOptions="Start" />
+
+        <ScrollView x:Name="ScrollView" Grid.Row="1">
+            <VerticalStackLayout Padding="20">
+                <Label 
+                Text="Add New Student"
+                FontSize="24"
+                FontAttributes="Bold"
+                HorizontalOptions="Center" 
+                VerticalOptions="Start" />
+
+                <Label Text="Name"
+                   FontSize="18"
+                   HorizontalOptions="Start"/>
+                <Entry x:Name="NameEntry" Text="{Binding Name}"
+                   Placeholder="Enter name" WidthRequest="350" HorizontalOptions="Start"
+                   Margin="10" />
+
+                <Label Text="Age"
+                   FontSize="18"
+                   HorizontalOptions="Start" />
+                <Entry x:Name="AgeEntry" Text="{Binding Age}"
+                       Placeholder="Enter age" WidthRequest="350" HorizontalOptions="Start"
+                       Margin="10" />
+
+                <Label Text="Location"
+                   FontSize="18" HorizontalOptions="Start" />
+                <Entry x:Name="LocationEntry" Text="{Binding Location}"
+                       Placeholder="Enter location" WidthRequest="350" HorizontalOptions="Start"
+                       Margin="10" />
+
+                <Label Text="Parent name - optional"
+                   FontSize="18" HorizontalOptions="Start"/>
+                <Entry x:Name="ParentNameEntry" Text="{Binding ParentName}"
+                       Placeholder="Enter parent name" WidthRequest="350" HorizontalOptions="Start"
+                       Margin="20" />
+
+                <Label Text="Is student active?" FontSize="18" HorizontalOptions="Start"/>
+                <CheckBox IsChecked="{Binding IsActive}"/>
+
+                <Button Text="Add"
+                    VerticalOptions="End"
+                    Command="{Binding AddCommand}"/>
+                
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>
