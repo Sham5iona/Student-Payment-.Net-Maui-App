@@ -23,7 +23,7 @@ namespace StudentPaymentApp.ViewModel
         {
         }
 
-        public async void LoadAppointmentsAsync()
+        public async void LoadAppointments()
         {
 
             var appointments = await _service.ShowAppointmentsAsync();

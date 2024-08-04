@@ -81,8 +81,12 @@ namespace StudentPaymentApp.ViewModel
             var endDateTime = EndDate.Date + EndTime;
             DateTime now = DateTime.Now;
 
+            //this checks for valid datetime and can be pasted optional but for
+            //this case is not intended
+            //|| startDateTime < now.Date || endDateTime <= now ||
+
             // Ensure input data is all valid
-            if (string.IsNullOrWhiteSpace(Subject) || startDateTime < now.Date || endDateTime <= now ||
+            if (string.IsNullOrWhiteSpace(Subject) ||
             DateTime.Compare(startDateTime, endDateTime) >= 0 ||
             string.IsNullOrWhiteSpace(Location) || string.IsNullOrWhiteSpace(Description))
             {
@@ -129,9 +133,9 @@ namespace StudentPaymentApp.ViewModel
             DateTime now = DateTime.Now;
 
             // Ensure input data is all valid
-            if (string.IsNullOrWhiteSpace(Subject) || startDateTime < now.Date || endDateTime <= now.Date ||
-            DateTime.Compare(startDateTime, endDateTime) >= 0 ||
-            string.IsNullOrWhiteSpace(Location) || string.IsNullOrWhiteSpace(Description))
+            if (string.IsNullOrWhiteSpace(Subject) ||
+                DateTime.Compare(startDateTime, endDateTime) >= 0 ||
+                string.IsNullOrWhiteSpace(Location) || string.IsNullOrWhiteSpace(Description))
             {
                 //Send a message request by Messaging Center to be shown on the view that is subscribed to this view model
                 MessagingCenter.Send(this, "Invalid input data!");
@@ -142,10 +146,10 @@ namespace StudentPaymentApp.ViewModel
 
             var appointments = await _service.GetAppointmentsAsync();
 
-            var exists = appointments.Any(a =>
+            var exists = appointments.FirstOrDefault(a =>
                 a.StartDate == startDateTime || a.EndDate == endDateTime);
 
-            if (exists)
+            if (exists is not null && exists.Id != _id)
             {
                 MessagingCenter.Send(this, "Appointment already exists!");
                 return;
