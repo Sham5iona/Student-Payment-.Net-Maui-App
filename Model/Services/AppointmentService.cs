@@ -107,5 +107,6 @@ namespace StudentPaymentApp.Model.Services
         {
             return await _dbContext.GetAppointmentIdAsync(appointment);
         }
+        
     }
 }

@@ -38,7 +38,7 @@ namespace StudentPaymentApp.Model
         public DateTime LastModification
         {
             get { return _lastModification; }
-            set { _lastModification = DateTime.Now; }
+            set { _lastModification = value; }
         }
 
         public Student(string name, int age, string location, string? parentName,
