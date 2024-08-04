@@ -22,13 +22,20 @@ namespace StudentPaymentApp
                 });
             // Register services and view models
             builder.Services.AddTransient<IAppointmentService, AppointmentService>();
+            builder.Services.AddTransient<IStudentService, StudentService>();
             builder.Services.AddTransient<AppointmentViewModel>();
             builder.Services.AddTransient<SchedulerViewModel>();
+            builder.Services.AddTransient<StudentViewModel>();
+            builder.Services.AddTransient<ShowStudentsViewModel>();
             builder.Services.AddSingleton<StudentPaymentDbContext>();
+
 
             // Register pages
             builder.Services.AddSingleton<SchedulePage>();
             builder.Services.AddSingleton<AddAppointmentPage>();
+            builder.Services.AddSingleton<StudentsPage>();
+            builder.Services.AddSingleton<AddStudentPage>();
+            builder.Services.AddSingleton<EditStudentPage>();
             builder.Services.AddSingleton<EditAppointmentPage>();
 
 #if DEBUG
