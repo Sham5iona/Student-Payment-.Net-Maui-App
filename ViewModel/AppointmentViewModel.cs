@@ -3,12 +3,16 @@ using CommunityToolkit.Mvvm.Input;
 using StudentPaymentApp.Model;
 using StudentPaymentApp.Model.Services;
 using StudentPaymentApp.Views;
+using System.Collections.ObjectModel;
 
 namespace StudentPaymentApp.ViewModel
 {
     public partial class AppointmentViewModel : ObservableObject
     {
         private readonly IAppointmentService _service;
+        private readonly IStudentService _studentService;
+        private readonly IPaymentService _paymentService;
+
         private static int _id;
 
         [ObservableProperty]
@@ -32,26 +36,56 @@ namespace StudentPaymentApp.ViewModel
         [ObservableProperty]
         private string location;
 
+        [ObservableProperty]
+        private string selectedType;
+
+        [ObservableProperty]
+        private bool? isFinished;
+
+        [ObservableProperty]
+        private ObservableCollection<string> appointmentTypes;
+
+        [ObservableProperty]
+        private ObservableCollection<Appointment> appointments;
+
+        public AppointmentViewModel(IAppointmentService service,
+                                    IStudentService studentService,
+                                    IPaymentService paymentService)
+        {
+            _service = service;
+            _studentService = studentService;
+            _paymentService = paymentService;
+            Appointments = new ObservableCollection<Appointment>();
+            InitializeAppointmentTypes();
+            InitializeProperties();
+        }
+
         public AppointmentViewModel()
         {
             
         }
-
-        // Combine the constructors to ensure IAppointmentService is always initialized
-        public AppointmentViewModel(IAppointmentService service)
+        private void InitializeAppointmentTypes()
         {
-            _service = service;
+            AppointmentTypes = new ObservableCollection<string>
+            {
+                "Once", "Everyday", "Working days", "Every week", "Every month"
+            };
+        }
 
-            InitializeProperties();
+        public async Task LoadFilteredAppointmentsAsync(string searchText)
+        {
+            var filteredAppointments = await _service.FilterAppointmentsBySearchTextAsync(searchText);
+
+            Appointments.Clear();
+
+            foreach(var appointment in filteredAppointments)
+            {
+                Appointments.Add(appointment);
+            }
         }
 
         public void InitializeProperties()
         {
-            // Initialize properties with default values
-            StartDate = DateTime.Now;
-            EndDate = DateTime.Now;
-            StartTime = DateTime.Now.TimeOfDay;
-            EndTime = DateTime.Now.TimeOfDay;
             Subject = string.Empty;
             Location = string.Empty;
             Description = string.Empty;
@@ -59,8 +93,7 @@ namespace StudentPaymentApp.ViewModel
 
         public void ExtractProperties(Appointment appointment)
         {
-
-            if (appointment == null) 
+            if (appointment == null)
                 throw new ArgumentNullException(nameof(appointment));
 
             _id = appointment.Id;
@@ -71,58 +104,101 @@ namespace StudentPaymentApp.ViewModel
             Subject = appointment.Subject;
             Location = appointment.Location;
             Description = appointment.Description;
+            IsFinished = appointment.IsFinished;
+        }
+
+        private async Task<bool> ValidateAppointmentAsync(DateTime startDateTime, DateTime endDateTime)
+        {
+            if (string.IsNullOrWhiteSpace(Subject) ||
+                startDateTime >= endDateTime ||
+                string.IsNullOrWhiteSpace(Location) ||
+                string.IsNullOrWhiteSpace(Description))
+            {
+                MessagingCenter.Send(this, "Invalid input data!");
+                return false;
+            }
+
+            var appointments = await _service.GetAppointmentsAsync();
+            bool exists = appointments.Any(a => (a.StartDate == startDateTime || a.EndDate == endDateTime)
+                          && a.Id != _id);
+
+            if (exists)
+            {
+                MessagingCenter.Send(this, "Appointment already exists!");
+                return false;
+            }
+
+            return true;
+        }
+
+        private async Task ScheduleAppointmentsAsync(DateTime startDateTime, DateTime endDateTime, Func<DateTime, DateTime> incrementDate)
+        {
+            var deadline = new DateTime(endDateTime.Year + 1, endDateTime.Month, endDateTime.Day);
+
+            for (DateTime currentDate = startDateTime.Date; currentDate <= deadline; currentDate = incrementDate(currentDate))
+            {
+                var automatedAppointment = new Appointment
+                {
+                    Subject = Subject,
+                    StartDate = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day,
+                                              startDateTime.Hour, startDateTime.Minute, startDateTime.Second),
+                    EndDate = new DateTime(currentDate.Year, currentDate.Month, currentDate.Day,
+                                            endDateTime.Hour, endDateTime.Minute, endDateTime.Second),
+                    Description = Description,
+                    Location = Location,
+                    IsFinished = false
+                };
+
+                await _service.AddAppointmentAsync(automatedAppointment);
+            }
         }
 
         [RelayCommand]
         private async Task AddAsync()
         {
-
             var startDateTime = StartDate.Date + StartTime;
             var endDateTime = EndDate.Date + EndTime;
-            DateTime now = DateTime.Now;
 
-            //this checks for valid datetime and can be pasted optional but for
-            //this case is not intended
-            //|| startDateTime < now.Date || endDateTime <= now ||
+            if (!await ValidateAppointmentAsync(startDateTime, endDateTime)) return;
 
-            // Ensure input data is all valid
-            if (string.IsNullOrWhiteSpace(Subject) ||
-            DateTime.Compare(startDateTime, endDateTime) >= 0 ||
-            string.IsNullOrWhiteSpace(Location) || string.IsNullOrWhiteSpace(Description))
+            switch (SelectedType)
             {
-                //Send a message request by Messaging Center to be shown on the view that is subscribed to this view model
-                MessagingCenter.Send(this, "Invalid input data!");
+                case "Once":
+                    await _service.AddAppointmentAsync(new Appointment
+                    {
+                        Subject = Subject,
+                        StartDate = startDateTime,
+                        EndDate = endDateTime,
+                        Description = Description,
+                        Location = Location,
+                        IsFinished = false,
+                        LastModification = DateTime.Now
+                    });
+                    break;
 
-                return;
+                case "Everyday":
+                    await ScheduleAppointmentsAsync(startDateTime, endDateTime, date => date.AddDays(1));
+                    break;
 
+                case "Every week":
+                    await ScheduleAppointmentsAsync(startDateTime, endDateTime, date => date.AddDays(7));
+                    break;
+
+                case "Every month":
+                    await ScheduleAppointmentsAsync(startDateTime, endDateTime, date => date.AddMonths(1));
+                    break;
+
+                case "Working days":
+                    await ScheduleAppointmentsAsync(startDateTime, endDateTime, date => date.AddDays(1));
+                    break;
+
+                default:
+                    MessagingCenter.Send(this, "Unknown appointment type!");
+                    return;
             }
 
-            var appointments = await _service.GetAppointmentsAsync();
-            
-            var exists = appointments.Any(a =>
-                a.StartDate == startDateTime || a.EndDate == endDateTime);
-
-            if (exists)
-            {
-                MessagingCenter.Send(this, "Appointment already exists!");
-                return;
-            }
-
-            var appointment = new Appointment
-            {
-                Subject = Subject,
-                StartDate = startDateTime,
-                EndDate = endDateTime,
-                Description = Description,
-                Location = Location,
-            };
-
-            await _service.AddAppointmentAsync(appointment);
-
-            // Clear properties and reload appointments
             InitializeProperties();
-
-            await Shell.Current.GoToAsync(".."); //navigate to previous page
+            await Shell.Current.GoToAsync("..");
         }
 
         [RelayCommand]
@@ -130,31 +206,37 @@ namespace StudentPaymentApp.ViewModel
         {
             var startDateTime = StartDate.Date + StartTime;
             var endDateTime = EndDate.Date + EndTime;
-            DateTime now = DateTime.Now;
 
-            // Ensure input data is all valid
-            if (string.IsNullOrWhiteSpace(Subject) ||
-                DateTime.Compare(startDateTime, endDateTime) >= 0 ||
-                string.IsNullOrWhiteSpace(Location) || string.IsNullOrWhiteSpace(Description))
-            {
-                //Send a message request by Messaging Center to be shown on the view that is subscribed to this view model
-                MessagingCenter.Send(this, "Invalid input data!");
-
-                return;
-
-            }
+            if (!await ValidateAppointmentAsync(startDateTime, endDateTime)) return;
 
             var appointments = await _service.GetAppointmentsAsync();
+            var currentAppointment = appointments.FirstOrDefault(a => a.Id == _id);
 
-            var exists = appointments.FirstOrDefault(a =>
-                a.StartDate == startDateTime || a.EndDate == endDateTime);
+            // Store original values
+            var originalSubject = currentAppointment.Subject;
+            var originalStartDate = currentAppointment.StartDate;
+            var originalEndDate = currentAppointment.EndDate;
+            var originalDescription = currentAppointment.Description;
+            var originalLocation = currentAppointment.Location;
+            var originalIsFinished = currentAppointment.IsFinished;
 
-            if (exists is not null && exists.Id != _id)
+            // Check if any property has changed
+            bool isChanged =
+                originalSubject != Subject ||
+                originalStartDate != startDateTime ||
+                originalEndDate != endDateTime ||
+                originalDescription != Description ||
+                originalLocation != Location ||
+                originalIsFinished != IsFinished;
+
+            // If nothing has changed, navigate back without making any updates
+            if (!isChanged)
             {
-                MessagingCenter.Send(this, "Appointment already exists!");
+                await Shell.Current.GoToAsync("..");
                 return;
             }
 
+            // Proceed with updating the appointment
             var appointment = new Appointment
             {
                 Id = _id,
@@ -162,15 +244,26 @@ namespace StudentPaymentApp.ViewModel
                 StartDate = startDateTime,
                 EndDate = endDateTime,
                 Description = Description,
-                Location = Location
+                Location = Location,
+                IsFinished = IsFinished,
+                LastModification = DateTime.Now
             };
 
             await _service.EditAppointmentAsync(appointment);
 
-            // Clear properties and reload appointments
-            InitializeProperties();
+            // Handle logic for marking an appointment as finished
+            if (!originalIsFinished.Value && IsFinished.Value)
+            {
+                var students = await _studentService.GetStudentsAsync();
+                var student = students.FirstOrDefault(a => a.Name == Subject);
+                var studentPayment = await _studentService.GetStudentPaymentByStudentIdAsync(student.Id);
 
-            await Shell.Current.GoToAsync(nameof(SchedulePage)); //navigate to previous page
+                studentPayment.Payment.LastAmount -= 10;
+                await _paymentService.UpdatePaymentAsync(studentPayment.Payment);
+            }
+
+            InitializeProperties();
+            await Shell.Current.GoToAsync(nameof(SchedulePage));
         }
 
     }

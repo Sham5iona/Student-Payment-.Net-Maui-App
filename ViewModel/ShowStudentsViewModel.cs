@@ -11,13 +11,15 @@ namespace StudentPaymentApp.ViewModel
     public partial class ShowStudentsViewModel : ObservableObject
     {
         private readonly IStudentService _service;
+        private readonly IPaymentService _paymentService;
 
         public ObservableCollection<Student> Students { get; private set; }
 
-        public ShowStudentsViewModel(IStudentService service)
+        public ShowStudentsViewModel(IStudentService service, IPaymentService paymentService)
         {
             _service = service;
             Students = new ObservableCollection<Student>();
+            _paymentService = paymentService;
         }
         public ShowStudentsViewModel()
         {
@@ -31,7 +33,11 @@ namespace StudentPaymentApp.ViewModel
 
             foreach (var student in students)
             {
+                student.Payment.FormattedAmount = $"{student.Payment.LastAmount}" +
+                                        $" / {student.Payment.GivenAmount}";
+
                 Students.Add(student);
+
             }
         }
 
@@ -39,6 +45,7 @@ namespace StudentPaymentApp.ViewModel
         private async Task DeleteAsync(int id)
         {
             var student = await _service.GetStudentByIdAsync(id);
+
             bool isConfirmed = await Application.Current.MainPage
                             .DisplayAlert("Delete a student", "Are you sure", "Ok",
                             "Cancel");
@@ -60,6 +67,8 @@ namespace StudentPaymentApp.ViewModel
 
             foreach (var student in students)
             {
+                student.Payment.FormattedAmount = $"{student.Payment.LastAmount}" +
+                                        $" / {student.Payment.GivenAmount}";
                 Students.Add(student);
             }
 
@@ -74,9 +83,28 @@ namespace StudentPaymentApp.ViewModel
 
             foreach (var student in students)
             {
+                student.Payment.FormattedAmount = $"{student.Payment.LastAmount}" +
+                                        $" / {student.Payment.GivenAmount}";
+
                 Students.Add(student);
             }
 
+        }
+
+        public async void CheckStudentsWithLowLeftAmountAsync()
+        {
+            var students = await _service.GetStudentsAsync();
+
+            foreach(var student in students)
+            {
+                if (student.Payment.LastAmount <= 20)
+                {
+                    await Application.Current.MainPage.DisplayAlert(
+                        "Student notification",
+                        $"NOTE: {student.Name} has {student.Payment.LastAmount} / {student.Payment.GivenAmount}" +
+                        $" payment amount which may expire shortly! ", "OK");
+                }
+            }
         }
     }
 }
