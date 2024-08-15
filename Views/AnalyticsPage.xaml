@@ -1,10 +1,85 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="StudentPaymentApp.Views.AnalyticsPage">
-    
-    <VerticalStackLayout>
-   
-    </VerticalStackLayout>
-    
+             x:Class="StudentPaymentApp.Views.AnalyticsPage"
+             xmlns:local="clr-namespace:StudentPaymentApp.ViewModel"
+             xmlns:model="clr-namespace:StudentPaymentApp.Model">
+
+    <ContentPage.BindingContext>
+        <local:AnalyticsViewModel/>
+    </ContentPage.BindingContext>
+
+    <Grid>
+        <!-- Define two equal rows and two equal columns -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Top-left square -->
+        <Frame Grid.Row="0" Grid.Column="0" BackgroundColor="LightBlue" Margin="5">
+            <Label Text="{Binding Students.Count, StringFormat='Students count: {0}'}" 
+                   HorizontalOptions="Center" VerticalOptions="Center" FontSize="35"/>
+        </Frame>
+
+        <!-- Top-right square -->
+        <Frame Grid.Row="0" Grid.Column="1" BackgroundColor="LightGreen" Margin="5">
+            <Label Text="{Binding Appointments.Count, StringFormat='Appointments count: {0}'}" 
+                   HorizontalOptions="Center" VerticalOptions="Center" FontSize="35"/>
+        </Frame>
+
+        <!-- Bottom-left square with scrolling -->
+        <Frame Grid.Row="1" Grid.Column="0" BackgroundColor="LightBlue">
+            <ScrollView x:Name="ScrollView">
+                <CollectionView ItemsSource="{Binding Students}"
+                                VerticalOptions="FillAndExpand"
+                                HorizontalOptions="FillAndExpand">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:Student">
+                            <Frame BorderColor="Transparent" BackgroundColor="LightBlue" HasShadow="True">
+                                <VerticalStackLayout>
+                                    <Label Text="{Binding Name, StringFormat='Name: {0}'}" FontSize="25" FontAttributes="Bold"/>
+                                    <Label Text="{Binding Payment.FormattedAmount, StringFormat='Amount left: {0}'}" FontSize="25" FontAttributes="Bold"/>
+                                    <Label Text="{Binding ParentName, StringFormat='Parent name: {0}'}" FontSize="25" FontAttributes="Bold"/>
+                                    <Label Text="{Binding Age, StringFormat='Age: {0}'}" FontSize="25" FontAttributes="Bold"/>
+                                    <Label Text="{Binding Location, StringFormat='Location: {0}'}" FontSize="25" FontAttributes="Bold"/>
+                                    <Label Text="{Binding IsActive, StringFormat='Is active: {0}'}" FontSize="25" FontAttributes="Bold"/>
+                                    <Label Text="{Binding LastModification, StringFormat='Last modified: {0}'}" FontSize="25" FontAttributes="Bold"/>
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </ScrollView>
+        </Frame>
+
+        <!-- Bottom-right square with scrolling -->
+        <Frame Grid.Row="1" Grid.Column="1" BackgroundColor="LightGreen">
+            <ScrollView x:Name="ScrollView2">
+                <CollectionView ItemsSource="{Binding Appointments}"
+                                VerticalOptions="FillAndExpand"
+                                HorizontalOptions="FillAndExpand">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="model:Appointment">
+                            <Frame HasShadow="True" BackgroundColor="LightGreen" BorderColor="Transparent">
+                                <VerticalStackLayout>
+                                    <Label Text="{Binding Subject, StringFormat='Subject: {0}'}" FontSize="25" FontAttributes="Bold"/>
+                                    <Label Text="{Binding StartDate, StringFormat='Start date: {0}'}" FontSize="25" FontAttributes="Bold"/>
+                                    <Label Text="{Binding EndDate, StringFormat='End date: {0}'}" FontSize="25" FontAttributes="Bold"/>
+                                    <Label Text="{Binding Location, StringFormat='Location: {0}'}" FontSize="25" FontAttributes="Bold"/>
+                                    <Label Text="{Binding Description, StringFormat='Description: {0}'}" FontSize="25" FontAttributes="Bold"/>
+                                    <Label Text="{Binding IsFinished, StringFormat='Is finished: {0}'}" FontSize="25" FontAttributes="Bold"/>
+                                    <Label Text="{Binding LastModification, StringFormat='Last modified: {0}'}" FontSize="25" FontAttributes="Bold"/>
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </ScrollView>
+        </Frame>
+    </Grid>
 </ContentPage>

@@ -34,6 +34,13 @@
                        Placeholder="Enter age" WidthRequest="350" HorizontalOptions="Start"
                        Margin="10" />
 
+                <Label Text="Given payment amount"
+                    FontSize="18"
+                    HorizontalOptions="Start" />
+                        <Entry Text="{Binding GivenAmount}"
+                        Placeholder="Enter given amount" WidthRequest="350" HorizontalOptions="Start"
+                        Margin="10" />
+
                 <Label Text="Location"
                    FontSize="18" HorizontalOptions="Start" />
                 <Entry x:Name="LocationEntry" Text="{Binding Location}"

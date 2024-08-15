@@ -24,6 +24,26 @@ public partial class AddAppointmentPage : ContentPage
         {
             await DisplayAlert("Error", "The appointment already exists!", "OK");
         });
+
+        MessagingCenter.Subscribe<AppointmentViewModel>(this, "Deadline of the everyday appointment", async (sender) =>
+        {
+            await DisplayAlert("Note", "The deadline of the appointment is one year ahead!", "OK");
+        });
+
+        MessagingCenter.Subscribe<AppointmentViewModel>(this, "Deadline of the every month appointment", async (sender) =>
+        {
+            await DisplayAlert("Note", "The deadline of the appointment is one year ahead!", "OK");
+        });
+
+        MessagingCenter.Subscribe<AppointmentViewModel>(this, "Deadline of the every week appointment", async (sender) =>
+        {
+            await DisplayAlert("Note", "The deadline of the appointment is one year ahead!", "OK");
+        });
+
+        MessagingCenter.Subscribe<AppointmentViewModel>(this, "Deadline of the working days only appointment", async (sender) =>
+        {
+            await DisplayAlert("Note", "The deadline of the appointment is one year ahead!", "OK");
+        });
     }
     public AddAppointmentPage()
     {
@@ -40,7 +60,6 @@ public partial class AddAppointmentPage : ContentPage
     }
     private async void GoBack(object sender, EventArgs e)
     {
-
         await Shell.Current.GoToAsync(".."); //navigate to previous page
     }
 

@@ -11,16 +11,18 @@
     </ContentPage.BindingContext>
 
     <Grid Padding="10">
-        <!-- Define row heights to accommodate the fixed "Add" button -->
+        <!-- Define row heights to accommodate the fixed "Add" button and search bar -->
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- For the search bar -->
             <RowDefinition Height="Auto"/>
             <!-- For the "Add" button -->
             <RowDefinition Height="*"/>
             <!-- For the scrollable content -->
         </Grid.RowDefinitions>
-        
-        <!-- Fixed "Add" button -->
-        <Frame Grid.Row="0" VerticalOptions="End" HorizontalOptions="End" BackgroundColor="Transparent" BorderColor="Transparent" Padding="10">
+
+        <!-- Fixed "Add" button and sort buttons -->
+        <Frame Grid.Row="1" VerticalOptions="End" HorizontalOptions="End" BackgroundColor="Transparent" BorderColor="Transparent" Padding="10">
             <StackLayout Orientation="Horizontal" Spacing="5">
                 <Image Source="add.png" WidthRequest="50" HeightRequest="60">
                     <Image.GestureRecognizers>
@@ -37,17 +39,30 @@
                         <TapGestureRecognizer Command="{Binding SortDescCommand}"/>
                     </Image.GestureRecognizers>
                 </Image>
+                
+            </StackLayout>
+        </Frame>
+        <!-- Search bar -->
+        <Frame Grid.Row="0" BackgroundColor="Transparent" BorderColor="Transparent" Padding="10">
+            <StackLayout Orientation="Horizontal" Spacing="5">
+                <Entry x:Name="SearchField" Placeholder="Search..." Text="{Binding SearchText, Mode=TwoWay}" TextChanged="FilterAsync"  FontSize="25" HorizontalOptions="FillAndExpand"/>
+                <Image Source="search.png" WidthRequest="50" HeightRequest="50" Margin="5">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding SearchCommand}"/>
+                    </Image.GestureRecognizers>
+                </Image>
             </StackLayout>
         </Frame>
 
         <!-- Scrollable content -->
-        <ScrollView Grid.Row="1">
+        <ScrollView Grid.Row="2">
             <CollectionView ItemsSource="{Binding Students}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:Student">
                         <Frame Margin="5" Padding="10" HasShadow="True">
                             <VerticalStackLayout>
                                 <Label Text="{Binding Name, StringFormat='Name: {0}'}" FontSize="25" FontAttributes="Bold"/>
+                                <Label Text="{Binding Payment.FormattedAmount, StringFormat='Amount left: {0}'}" FontSize="25" FontAttributes="Bold"/>
                                 <Label Text="{Binding ParentName, StringFormat='Parent name: {0}'}" FontSize="25" FontAttributes="Bold"/>
                                 <Label Text="{Binding Age, StringFormat='Age: {0}'}" FontSize="25" FontAttributes="Bold"/>
                                 <Label Text="{Binding Location, StringFormat='Location: {0}'}" FontSize="25" FontAttributes="Bold"/>

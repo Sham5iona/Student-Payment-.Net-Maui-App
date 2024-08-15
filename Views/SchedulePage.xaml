@@ -9,32 +9,33 @@
         <local:SchedulerViewModel />
     </ContentPage.BindingContext>
 
-    <Grid>
+    <Grid RowDefinitions="Auto,*">
+        <!-- Search bar -->
+        <Frame Grid.Row="0" BackgroundColor="Transparent" BorderColor="Transparent" Padding="10">
+            <StackLayout Orientation="Horizontal" Spacing="5">
+                <Entry x:Name="SearchField" Placeholder="Search..." Text="{Binding SearchText, Mode=TwoWay}"  FontSize="25" HorizontalOptions="FillAndExpand"/>
+                <Image Source="search.png" WidthRequest="50" HeightRequest="50" Margin="5">
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="RedirectToFilteredResults"/>
+                    </Image.GestureRecognizers>
+                </Image>
+            </StackLayout>
+        </Frame>
 
-        <!-- SfScheduler taking most of the screen -->
+        <!-- SfScheduler -->
         <scheduler:SfScheduler x:Name="Scheduler"
-                               Grid.Row="0"
+                               Grid.Row="1"
                                ShowBusyIndicator="True"
                                AppointmentsSource="{Binding Events}"
                                FirstDayOfWeek="Monday"
                                AllowedViews="Month,Day,Week,WorkWeek,TimelineDay,TimelineWeek,TimelineMonth,Agenda,TimelineWorkWeek,Default"
                                AllowViewNavigation="True"
-                               Tapped="ShowAppointmentPage">
+                               Tapped="ShowAppointmentPage"
+                               DoubleTapped="ShowAddAppointmentWithFixedDate">
             <scheduler:SfScheduler.MonthView>
                 <scheduler:SchedulerMonthView AppointmentDisplayMode="Indicator" NavigationDirection="Vertical"/>
             </scheduler:SfScheduler.MonthView>
         </scheduler:SfScheduler>
-
-        <!-- Image with tap gesture recognizer -->
-        <Frame Grid.Row="0" VerticalOptions="End" HorizontalOptions="End" BackgroundColor="Transparent" BorderColor="Transparent" Padding="10">
-            <StackLayout Orientation="Horizontal" Spacing="5">
-                <Image Source="add.png" WidthRequest="50" HeightRequest="60">
-                    <Image.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnAddImageTapped"/>
-                    </Image.GestureRecognizers>
-                </Image>
-            </StackLayout>
-        </Frame>
 
     </Grid>
 

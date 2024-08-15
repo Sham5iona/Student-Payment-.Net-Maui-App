@@ -2,8 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="StudentPaymentApp.Views.AddAppointmentPage"
-             xmlns:local="clr-namespace:StudentPaymentApp.ViewModel"
-             Title="Add Appointment">
+             xmlns:local="clr-namespace:StudentPaymentApp.ViewModel">
 
     <Grid RowDefinitions="Auto,*">
         <Button Grid.Row="0" ImageSource="go_back.png" Margin="5" WidthRequest="60" Clicked="GoBack" HeightRequest="30" HorizontalOptions="Start" VerticalOptions="Start" />
@@ -56,6 +55,14 @@
                 <Entry x:Name="LocationEntry" Text="{Binding Location}"
                         Placeholder="Enter location" WidthRequest="350" HorizontalOptions="Start"
                         Margin="10" />
+
+                <Label Text="How often will the appointment be made?"
+                       FontSize="18"
+                       HorizontalOptions="Start" Margin="10"/>
+                <Picker x:Name="TypePicker"
+                        SelectedItem="{Binding SelectedType}"
+                        ItemsSource="{Binding AppointmentTypes}"
+                        Margin="10"/>
 
                 <Button Text="Add"
                         VerticalOptions="End"

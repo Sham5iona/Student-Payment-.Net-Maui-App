@@ -3,6 +3,7 @@ using StudentPaymentApp.Model.Services;
 using StudentPaymentApp.ViewModel;
 using Syncfusion.Maui.Scheduler;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace StudentPaymentApp.Views
 {
@@ -22,12 +23,6 @@ namespace StudentPaymentApp.Views
             _viewModel = viewModel;
         }
 
-        private async void OnAddImageTapped(object sender, EventArgs e)
-        {
-            await Shell.Current.GoToAsync(nameof(AddAppointmentPage));
-        }
-
-
         private async void ShowAppointmentPage(object sender, SchedulerTappedEventArgs e)
         {
             if(e.Element == SchedulerElement.Appointment)
@@ -43,10 +38,38 @@ namespace StudentPaymentApp.Views
         protected override void OnAppearing()
         {
             base.OnAppearing();
-
+            SearchField.Text = string.Empty;
             _scheduler.LoadAppointments();
+            _scheduler.CheckFinishedAppointmentsAsync();
+        }
+        private async void ShowAddAppointmentWithFixedDate(object sender, SchedulerDoubleTappedEventArgs e)
+        {
+            if(e.Element == SchedulerElement.Appointment)
+            {
+                return;
+            }
+            else if(e.Element == SchedulerElement.SchedulerCell)
+            {
+                  _viewModel.StartDate = e.Date.Value;
+
+                  _viewModel.StartTime = e.Date.Value.TimeOfDay;
+
+                  _viewModel.EndDate = e.Date.Value.AddHours(1.5);
+
+                  _viewModel.EndTime = e.Date.Value.TimeOfDay
+                                      .Add(TimeSpan.FromHours(1.5));
+
+                  await Navigation.PushAsync(new AddAppointmentPage(_viewModel));
+                
+            }
+                
         }
 
-
+        private async void RedirectToFilteredResults(object sender, TappedEventArgs args)
+        {
+            await Navigation.PushAsync(new FilteredAppointmentsPage(SearchField.Text,
+                                           _viewModel, _appointmentService));
+        }
+        
     }
 }

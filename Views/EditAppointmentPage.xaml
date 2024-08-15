@@ -60,7 +60,10 @@
                         Placeholder="Enter location" WidthRequest="350" HorizontalOptions="Start"
                         Margin="10" />
 
-                    <Button Text="Save"
+                <Label Text="Is appointment finished?" FontSize="18" HorizontalOptions="Start"/>
+                <CheckBox IsChecked="{Binding IsFinished}"/>
+
+                <Button Text="Save"
                         VerticalOptions="End"
                         Command="{Binding EditCommand}"/>
                 </VerticalStackLayout>

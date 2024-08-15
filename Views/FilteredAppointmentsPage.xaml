@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="StudentPaymentApp.Views.FilteredAppointmentsPage"
+             xmlns:local="clr-namespace:StudentPaymentApp.ViewModel"
+             xmlns:model="clr-namespace:StudentPaymentApp.Model">
+
+    <ContentPage.BindingContext>
+        <local:AppointmentViewModel/>
+    </ContentPage.BindingContext>
+    
+    <Grid Padding="10">
+        <!-- Define row heights to accommodate the fixed "Add" button and search bar -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- For the search bar -->
+            <RowDefinition Height="Auto"/>
+            <!-- For the "Add" button -->
+            <RowDefinition Height="*"/>
+            <!-- For the scrollable content -->
+        </Grid.RowDefinitions>
+        <StackLayout>
+            <Button Grid.Row="0" ImageSource="go_back.png" Margin="5" FontSize="20" Clicked="GoBack" WidthRequest="60" HeightRequest="30" HorizontalOptions="Start" VerticalOptions="Start" />
+
+        </StackLayout>
+        <!-- Scrollable content -->
+        <ScrollView Grid.Row="2">
+            <CollectionView ItemsSource="{Binding Appointments}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:Appointment">
+                        <Frame Margin="5" Padding="10" HasShadow="True">
+                            <VerticalStackLayout>
+                                <Label Text="{Binding Subject, StringFormat='Subject: {0}'}" FontSize="25" FontAttributes="Bold"/>
+                                <Label Text="{Binding StartDate, StringFormat='Start date: {0}'}" FontSize="25" FontAttributes="Bold"/>
+                                <Label Text="{Binding EndDate, StringFormat='End date: {0}'}" FontSize="25" FontAttributes="Bold"/>
+                                <Label Text="{Binding Location, StringFormat='Location: {0}'}" FontSize="25" FontAttributes="Bold"/>
+                                <Label Text="{Binding Description, StringFormat='Description: {0}'}" FontSize="25" FontAttributes="Bold"/>
+                                <Label Text="{Binding LastModification, StringFormat='Last modified: {0}'}" FontSize="25" FontAttributes="Bold"/>
+                            </VerticalStackLayout>
+                        </Frame>
+
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </ScrollView>
+    </Grid>
+</ContentPage>

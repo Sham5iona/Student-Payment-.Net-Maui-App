@@ -18,6 +18,9 @@
                 <Label Text="End Time" FontSize="Medium" FontAttributes="Bold"/>
                 <Label Text="{Binding EndTime, StringFormat='{0:MMMM dd, yyyy HH:mm}'}" FontSize="Medium"/>
 
+                <Label Text="Is finished?" FontSize="Medium" FontAttributes="Bold"/>
+                <Label Text="{Binding IsReadOnly}" FontSize="Medium"/>
+
                 <Label Text="Location" FontSize="Medium" FontAttributes="Bold"/>
                 <Label Text="{Binding Location}" FontSize="Medium"/>
 

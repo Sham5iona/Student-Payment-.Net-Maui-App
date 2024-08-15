@@ -42,7 +42,7 @@ public partial class AppointmentDetailsPage : ContentPage
 	{
         var appointment = _service.ConfigureAppointment(_appointment);
 
-		appointment.Id = await _service.GetAppointmentIdByDate(appointment);
+		appointment.Id = await _service.GetAppointmentIdAsync(appointment);
 
 		await Navigation.PushAsync(new EditAppointmentPage(_viewModel, appointment));
 
