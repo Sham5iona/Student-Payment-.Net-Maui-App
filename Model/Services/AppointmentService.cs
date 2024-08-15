@@ -35,7 +35,8 @@ namespace StudentPaymentApp.Model.Services
                     EndTime = appointment.EndDate,
                     Notes = appointment.Description,
                     Location = appointment.Location,
-                    Background = Colors.Blue
+                    Background = Colors.Blue,
+                    IsReadOnly = appointment.IsFinished ?? false
                 };
 
                 schedulerAppointments.Add(schedulerAppointment);
@@ -91,7 +92,8 @@ namespace StudentPaymentApp.Model.Services
                 Description = scheduler_appointment.Notes,
                 Location = scheduler_appointment.Location,
                 StartDate = scheduler_appointment.StartTime,
-                EndDate = scheduler_appointment.EndTime
+                EndDate = scheduler_appointment.EndTime,
+                IsFinished = scheduler_appointment.IsReadOnly
             };
 
             return appointment;
@@ -103,10 +105,14 @@ namespace StudentPaymentApp.Model.Services
             return appointment;
         }
 
-        public async Task<int> GetAppointmentIdByDate(Appointment appointment)
+        public async Task<int> GetAppointmentIdAsync(Appointment appointment)
         {
             return await _dbContext.GetAppointmentIdAsync(appointment);
         }
-        
+
+        public async Task<IEnumerable<Appointment>> FilterAppointmentsBySearchTextAsync(string searchText)
+        {
+            return await _dbContext.FilterAppointmentsBySearchTextAsync(searchText);
+        }
     }
 }

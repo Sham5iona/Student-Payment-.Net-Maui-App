@@ -15,6 +15,7 @@ namespace StudentPaymentApp.Model.Services
                             SchedulerAppointment scheduler_appointment);
         public Task<Appointment> EditAppointmentAsync(Appointment appointment);
 
-        public Task<int> GetAppointmentIdByDate(Appointment appointment);
+        public Task<int> GetAppointmentIdAsync(Appointment appointment);
+        public Task<IEnumerable<Appointment>> FilterAppointmentsBySearchTextAsync(string searchText);
     }
 }

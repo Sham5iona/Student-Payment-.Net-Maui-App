@@ -1,7 +1,5 @@
 ﻿using SQLite;
 using SQLiteNetExtensions.Attributes;
-using StudentPaymentApp.Model;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 
 namespace StudentPaymentApp.Model
@@ -16,6 +14,8 @@ namespace StudentPaymentApp.Model
         private int _student_id;
         [SQLiteNetExtensions.Attributes.ForeignKey(typeof(Student))]
         public int StudentId { get { return _student_id; } set { _student_id = value; } }
+
+        [OneToOne(CascadeOperations = CascadeOperation.All)]
         public Student Student { get; set; }
 
         private decimal _givenAmount;
@@ -38,8 +38,12 @@ namespace StudentPaymentApp.Model
         public DateTime LastModification
         {
             get { return _lastModification; }
-            set { _lastModification = DateTime.Now; }
+            set { _lastModification = value; }
         }
+
+        [Ignore]
+        public string? FormattedAmount { get; set; }
+
 
         public Payment(int studentId, decimal givenAmount, decimal lastAmount)
         {

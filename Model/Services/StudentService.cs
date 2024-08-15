@@ -10,9 +10,10 @@ namespace StudentPaymentApp.Model.Services
             _dbContext = dbContext;
         }
 
-        public async Task AddStudentAsync(Student student)
+        public async Task<Student> AddStudentAsync(Student student)
         {
-            await _dbContext.AddStudentAsync(student);
+             var created_student = await _dbContext.AddStudentAsync(student);
+             return created_student;
         }
 
         public async Task<IEnumerable<Student>> GetStudentsAsync()
@@ -43,6 +44,16 @@ namespace StudentPaymentApp.Model.Services
         public async Task<IEnumerable<Student>> SortDescAsync()
         {
             return await _dbContext.SortDescAsync();
+        }
+
+        public async Task<IEnumerable<Student>> FilterAsync(string search_string)
+        {
+            return await _dbContext.FilterAsync(search_string);
+        }
+
+        public async Task<Student> GetStudentPaymentByStudentIdAsync(int studentId)
+        {
+            return await _dbContext.GetStudentPaymentByStudentIdAsync(studentId);
         }
     }
 }

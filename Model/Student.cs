@@ -32,7 +32,7 @@ namespace StudentPaymentApp.Model
         public bool IsActive { get { return _isActive; } set { _isActive = value; } }
 
         [OneToOne(CascadeOperations = CascadeOperation.All)]
-        public Payment Payment { get; set; }
+        public Payment? Payment { get; set; }
 
         private DateTime _lastModification;
         public DateTime LastModification
@@ -49,6 +49,7 @@ namespace StudentPaymentApp.Model
             this.Location = location;
             this.ParentName = parentName;
             this.IsActive = isActive;
+        
         }
         public Student()
         {

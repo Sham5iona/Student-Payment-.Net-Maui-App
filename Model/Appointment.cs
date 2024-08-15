@@ -29,14 +29,28 @@ namespace StudentPaymentApp.Model
         [NotNull, SQLite.Column("")]
         public string Location { get { return _location; } set { _location = value; } }
 
+        private bool? _isFinished;
+        [SQLite.Column("IsFinished")]
+        public bool? IsFinished { get { return _isFinished; } set { _isFinished = value; } }
+                
+        private DateTime _lastModification;
+
+        [SQLite.Column("LastModification")]
+        public DateTime LastModification
+        {
+            get { return _lastModification; }
+            set { _lastModification = value; }
+        }
+
         public Appointment(string subject, DateTime startDate, DateTime endDate,
-                           string description, string location)
+                           string description, string location, bool isFinished)
         {
             this.Subject = subject;
             this.StartDate = startDate;
             this.EndDate = endDate;
             this.Description = description;
             this.Location = location;
+            this.IsFinished = isFinished;
         }
 
         public Appointment()
