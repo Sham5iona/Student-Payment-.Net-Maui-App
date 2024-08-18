@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="StudentPaymentApp.Views.ForecastPopUpPage"
+             xmlns:local="clr-namespace:StudentPaymentApp.ViewModel">
+
+    <ContentPage.BindingContext>
+        <local:ForecastPopUpViewModel/>
+    </ContentPage.BindingContext>
+    
+    <ScrollView>
+        
+        <Frame Padding="10"
+           BackgroundColor="White"
+           CornerRadius="10"
+           WidthRequest="300"
+           VerticalOptions="Center"
+           HorizontalOptions="Center">
+        <VerticalStackLayout Spacing="10">
+            <Label Text="{Binding City, StringFormat='City: {0}'}"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+            <Label Text="{Binding Country, StringFormat='Country: {0}'}"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+            <Label Text="{Binding Localtime}"
+                   FontSize="14"
+                   HorizontalOptions="Center" />
+            <Image Source="{Binding Weather_icon}"
+                   Aspect="AspectFit"
+                   HeightRequest="100" />
+            <Label Text="{Binding Temperature}"
+                   FontSize="24"
+                   HorizontalOptions="Center" />
+            <Label Text="{Binding Weather_description}"
+                   FontSize="18"
+                   HorizontalOptions="Center" />
+            <Label Text="Additional Information:"
+                   FontSize="18"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+            <Label Text="{Binding AdditionalInfo}"
+                   FontSize="14"
+                   HorizontalOptions="Center" />
+            <Button Text="Close"
+                    Margin="10"
+                    Clicked="OnCloseButtonClicked"
+                    HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+        
+    </Frame>
+    
+    </ScrollView>
+    
+</ContentPage>
